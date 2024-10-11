@@ -51,7 +51,7 @@ public class E2ETest : E2EBase
                 .WithPath("/oauth2/bc-authorize")
                 .WithHeader("Authorization", this.Helper.ExpectedAuthorizationHeaderValue)
                 .WithBody(
-                    "login_hint=tel:%2B123456789&scope=dpv%3ANotApplicable%23device-status%3Aconnectivity%3Aread")
+                    "login_hint=tel:%2B123456789&scope=openid+dpv%3ANotApplicable%23device-status%3Aconnectivity%3Aread")
                 .UsingPost())
             .RespondWith(Response.Create().WithStatusCode(HttpStatusCode.OK)
                 .WithBody(this.Serialization.GetResponseJson(nameof(SerializationTest.ShouldDeserializeAuthorize))));

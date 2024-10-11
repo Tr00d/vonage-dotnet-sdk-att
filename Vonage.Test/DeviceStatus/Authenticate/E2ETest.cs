@@ -21,7 +21,7 @@ public class E2ETest : SimSwap.E2EBase
                 .WithPath("/oauth2/bc-authorize")
                 .WithHeader("Authorization", this.Helper.ExpectedAuthorizationHeaderValue)
                 .WithBody(
-                    "login_hint=tel:%2B447700900000&scope=dpv%3Atest%23scope")
+                    "login_hint=tel:%2B447700900000&scope=openid+dpv%3Atest%23scope")
                 .UsingPost())
             .RespondWith(Response.Create().WithStatusCode(HttpStatusCode.OK)
                 .WithBody(this.Serialization.GetResponseJson(nameof(SerializationTest.ShouldDeserializeAuthorize))));
