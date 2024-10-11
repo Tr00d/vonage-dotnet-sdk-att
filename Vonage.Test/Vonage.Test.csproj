@@ -871,6 +871,18 @@
         <None Update="DeviceStatus\GetConnectivityStatus\Data\ShouldSerialize-request.json">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="DeviceStatus\GetRoamingStatus\Data\ShouldDeserializeAccessToken-response.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="DeviceStatus\GetRoamingStatus\Data\ShouldDeserializeAuthorize-response.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="DeviceStatus\GetRoamingStatus\Data\ShouldDeserializeRoaming-response.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="DeviceStatus\GetRoamingStatus\Data\ShouldSerialize-request.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
         <Exec Command="node ../.scripts/init.js"/>

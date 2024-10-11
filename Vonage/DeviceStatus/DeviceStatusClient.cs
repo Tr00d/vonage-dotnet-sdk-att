@@ -5,6 +5,7 @@ using Vonage.Common.Client;
 using Vonage.Common.Monads;
 using Vonage.DeviceStatus.Authenticate;
 using Vonage.DeviceStatus.GetConnectivityStatus;
+using Vonage.DeviceStatus.GetRoamingStatus;
 using Vonage.Serialization;
 #endregion
 
@@ -36,7 +37,20 @@ internal class DeviceStatusClient : IDeviceStatusClient
             .BindAsync(client =>
                 client.SendWithResponseAsync<GetConnectivityStatusRequest, GetConnectivityStatusResponse>(request));
 
+    /// <inheritdoc />
+    public Task<Result<GetRoamingStatusResponse>> GetRoamingStatusAsync(Result<GetRoamingStatusRequest> request) =>
+        request
+            .Map(BuildAuthenticationRequest)
+            .BindAsync(this.AuthenticateAsync)
+            .Map(BuildAuthenticationHeader)
+            .Map(this.BuildClientWithAuthenticationHeader)
+            .BindAsync(client =>
+                client.SendWithResponseAsync<GetRoamingStatusRequest, GetRoamingStatusResponse>(request));
+
     private static Result<AuthenticateRequest> BuildAuthenticationRequest(GetConnectivityStatusRequest request) =>
+        request.BuildAuthenticationRequest();
+
+    private static Result<AuthenticateRequest> BuildAuthenticationRequest(GetRoamingStatusRequest request) =>
         request.BuildAuthenticationRequest();
 
     private static AuthenticationHeaderValue BuildAuthenticationHeader(AuthenticateResponse authentication) =>
