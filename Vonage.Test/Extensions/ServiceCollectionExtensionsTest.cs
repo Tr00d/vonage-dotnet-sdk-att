@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Vonage.DeviceStatus;
 using Vonage.Extensions;
 using Vonage.NumberVerification;
 using Vonage.Request;
@@ -65,6 +66,7 @@ namespace Vonage.Test.Extensions
             yield return new object[] {typeof(VonageClient)};
             yield return new object[] {typeof(INumberVerificationClient)};
             yield return new object[] {typeof(ISimSwapClient)};
+            yield return new object[] {typeof(IDeviceStatusClient)};
             yield return new object[] {typeof(ITokenGenerator)};
             yield return new object[] {typeof(Credentials)};
         }
