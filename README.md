@@ -9,16 +9,12 @@ first.
 
 * [Configuration](#configuration)
     * [Setup](#setup)
-        * [Lazy registration (recommended for .NET Core and above)](#lazy-registration-recommended-for-net-core-and-above)
-        * [Manual initialization (recommended for .NET Framework)](#manual-initialization-recommended-for-net-framework)
     * [Configuration reference](#configuration-reference)
-    * [Logging](#logging)
 * [Monads](#monads)
     * [Result](#result)
     * [Maybe](#maybe)
     * [What if you don't want to use Monads?](#what-if-you-dont-want-to-use-monads)
 * [Supported APIs](#supported-apis)
-* [Thanks](#thanks)
 * [Licence](#license)
 
 ## Installation
@@ -30,7 +26,7 @@ first.
 There are various ways to initialize a `VonageClient` with your custom values.
 
 Overall, we encourage you to specify your configuration (Vonage URLs, credentials, etc.) in `appsettings.json`, in
-an `appsettings` section:
+an `vonage` section:
 
 ```json
 {
@@ -41,9 +37,7 @@ an `appsettings` section:
     "Url.Api.EMEA": "https://api-eu.vonage.com",
     "Url.Api.AMER": "https://api-us.vonage.com",
     "Url.Api.APAC": "https://api-ap.vonage.com",
-    "Url.Api.Video": "https://video.api.vonage.com",
-    "Api.Key": "VONAGE-API-KEY",
-    "Api.Secret": "VONAGE-API-SECRET",    
+    "Url.Api.Video": "https://video.api.vonage.com", 
     "Application.Id": "ffffffff-ffff-ffff-ffff-ffffffffffff",
     "Application.Key": "VONAGE_APPLICATION_PRIVATE_KEY",
     "PooledConnectionIdleTimeout": "60", 
@@ -53,8 +47,6 @@ an `appsettings` section:
 ```
 
 The configuration is automatically loaded in the `Configuration` singleton.
-
-#### Lazy registration (recommended for .NET Core and above)
 
 > Note: This implementation is not available for .NET Framework usages, given IConfiguration has been introduced in .NET
 > Core.
@@ -84,40 +76,12 @@ builder.Services.AddVonageClientTransient(credentials);
 
 It will register the main `VonageClient`, but also all sub client interfaces:
 
-- IMessagesClient
-- IVerifyV2Client
-- IMeetingsClient
-- IVoiceClient
+- IDeviceStatusClient
+- ISimSwapClient
+- INumberVerificationClient
 - etc.
 
 Finally, you can inject them in any of your components.
-
-#### Manual initialization (recommended for .NET Framework)
-
-Create a Vonage Client instance and pass in credentials in the constructor;
-this will only affect the security credentials (Api Key, Api Secret, Signing Secret, Signing Method Private Key, App
-Id).
-
-```csharp
-var credentials = Credentials.FromApiKeyAndSecret(
-    VONAGE_API_KEY,
-    VONAGE_API_SECRET
-    );
-
-var vonageClient = new VonageClient(credentials);
-```
-
-If required, you can override values directly in the `Configuration` singleton:
-
-```cshap
-Configuration.Instance.Settings["vonage:Url.Api"] = "https://www.example.com/api";
-Configuration.Instance.Settings["vonage:Url.Rest"] = "https://www.example.com/rest";
-```
-
-> Note: Private Key is the literal key - not a path to the file containing the key
-
-> Note: Modifying the Configuration instance will be deprecated in the upcoming release, to keep the configuration
-> immutable.
 
 ### Configuration Reference
 
@@ -137,27 +101,6 @@ Configuration.Instance.Settings["vonage:Url.Rest"] = "https://www.example.com/re
 | PooledConnectionIdleTimeout | Optional. The time (in seconds) that a connection can be idle before it is closed. Defaults to 60 seconds.                       |
 | PooledConnectionLifetime    | Optional. The time (in seconds) that a connection can be alive before it is closed. Defaults to 600 seconds.                     |
 
-### Logging
-
-The Library uses Microsoft.Extensions.Logging to preform all of it's logging tasks. To configure logging for you app
-simply create a new `ILoggerFactory` and call the `LogProvider.SetLogFactory()` method to tell the Vonage library how to
-log. For example, to log to the console with serilog you can do the following:
-
-```csharp
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
-using Vonage.Logger;
-using Serilog;
-
-var log = new LoggerConfiguration()
-    .MinimumLevel.Debug()
-    .WriteTo.Console(outputTemplate: "{Timestamp:HH:mm} [{Level}]: {Message}\n")
-    .CreateLogger();
-var factory = new LoggerFactory();
-factory.AddSerilog(log);
-LogProvider.SetLogFactory(factory);
-```
-
 ## Monads
 
 Most recent features expose responses/results
@@ -166,7 +109,7 @@ While the name may be scary at first, this is just another data structure that o
 We can picture them as a `box` containing our value, and we manipulate the box instead of manipulating a value.
 
 Their purpose is to provide a value that can have multiple states, and deal with each state using a similar workflow.
-This is a alternative to exception handling -
+This is an alternative to exception handling -
 see [Railway Oriented Programming](https://fsharpforfunandprofit.com/posts/recipe-part2/).
 
 ### Result
@@ -305,25 +248,14 @@ The following is a list of Vonage APIs and whether the Vonage .NET SDK provides 
 
 | API                     |  API Release Status  | Supported? |
 |-------------------------|:--------------------:|:----------:|
+| Device Status API       | General Availability |     ✅      |
 | Number Verification API | General Availability |     ✅      |
 | SimSwap API             | General Availability |     ✅      |
-
-Pull requests are welcome!
 
 ## License
 
 This library is released under [the MIT License][license].
 
 [signup]: https://dashboard.nexmo.com/sign-up?utm_source=DEV_REL&utm_medium=github&utm_campaign=csharp-client-library
-
-[doc_sms]: https://developer.nexmo.com/api/sms?utm_source=DEV_REL&utm_medium=github&utm_campaign=csharp-client-library
-
-[doc_voice]: https://developer.nexmo.com/voice/voice-api/overview?utm_source=DEV_REL&utm_medium=github&utm_campaign=csharp-client-library
-
-[doc_verify]: https://developer.nexmo.com/verify/overview?utm_source=DEV_REL&utm_medium=github&utm_campaign=csharp-client-library
-
-[doc_app]: https://developer.nexmo.com/concepts/guides/applications?utm_source=DEV_REL&utm_medium=github&utm_campaign=csharp-client-library
-
-[doc_redact]: https://developer.nexmo.com/api/redact?utm_source=DEV_REL&utm_medium=github&utm_campaign=csharp-client-library
 
 [license]: LICENSE.md
