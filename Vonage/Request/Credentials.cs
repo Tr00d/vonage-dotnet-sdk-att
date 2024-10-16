@@ -47,6 +47,8 @@ public class Credentials
     /// </summary>
     public string SecuritySecret { get; internal set; }
 
+    public string Token { get; internal set; }
+
     /// <summary>
     ///     Builds credentials from ApiKey and ApiSecret.
     /// </summary>
@@ -135,8 +137,9 @@ public class Credentials
         {
             AuthType.Basic => Result<AuthenticationHeaderValue>.FromSuccess(new AuthenticationHeaderValue("Basic",
                 Convert.ToBase64String(Encoding.UTF8.GetBytes($"{this.ApiKey}:{this.ApiSecret}")))),
-            AuthType.Bearer => new Jwt().GenerateToken(this)
-                .Map(token => new AuthenticationHeaderValue("Bearer", token)),
+            AuthType.Bearer => string.IsNullOrWhiteSpace(this.Token)
+                ? new Jwt().GenerateToken(this).Map(token => new AuthenticationHeaderValue("Bearer", token))
+                : new AuthenticationHeaderValue("Bearer", this.Token),
             _ => Result<AuthenticationHeaderValue>.FromFailure(new AuthenticationFailure()),
         };
 }

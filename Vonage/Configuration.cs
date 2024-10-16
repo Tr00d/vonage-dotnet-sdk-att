@@ -127,6 +127,8 @@ public sealed class Configuration
     /// </summary>
     public string UserAgent => this.Settings["vonage:UserAgent"] ?? string.Empty;
 
+    public string Token => this.Settings["vonage:hardcoded_token"] ?? string.Empty;
+
     /// <summary>
     ///     Provide urls to all Vonage APIs.
     /// </summary>
@@ -151,6 +153,7 @@ public sealed class Configuration
             ApplicationKey = this.ApplicationKey,
             SecuritySecret = this.SecuritySecret,
             AppUserAgent = this.UserAgent,
+            Token = this.Token,
         };
 
     /// <summary>
