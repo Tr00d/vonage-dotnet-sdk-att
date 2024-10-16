@@ -61,7 +61,7 @@ public readonly struct HttpFailure : IResultFailure
 
     /// <inheritdoc />
     public string GetFailureMessage() => string.IsNullOrWhiteSpace(this.Message)
-        ? $"{(int) this.Code}."
+        ? $"{(int) this.Code} - {this.Json}."
         : $"{(int) this.Code} - {this.Message} - {this.Json}.";
 
     /// <inheritdoc />

@@ -12,7 +12,7 @@ public class HttpFailureTest
     [Fact]
     public void GetFailureMessage_ShouldReturnMessage_GivenFailureIsCreatedFromCode() =>
         HttpFailure.From(HttpStatusCode.NotFound).GetFailureMessage().Should()
-            .Be("404.");
+            .Be("404 - .");
 
     [Fact]
     public void GetFailureMessage_ShouldReturnMessage_GivenFailureIsCreatedFromCodeAndMessage() =>
